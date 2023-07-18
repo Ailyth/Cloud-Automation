@@ -1,0 +1,3 @@
+---
+cp_endpoint: "k8scpdm:6443"
+pod_subnet: 8.69.0.0/24

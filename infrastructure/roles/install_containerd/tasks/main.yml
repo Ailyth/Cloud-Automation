@@ -1,0 +1,50 @@
+---
+- name: Install dependent software
+  apt:
+    package:
+      - curl
+      - apt-transport-https
+      - vim
+      - git
+      - wget
+      - gnupg2
+      - software-properties-common
+      - ca-certificates
+      - uidmap
+
+- name: Disable swap
+  command: swapoff -a
+  changed_when: true
+
+- name: Remove swap from fstab
+  lineinfile:
+    path: '/etc/fstab'
+    regexp: '\sswap\s'
+    state: 'absent'
+
+- name: Add overlay module
+  community.general.modprobe:
+    name: overlay
+
+- name: Add br_netfilter module
+  community.general.modprobe:
+    name: br_netfilter
+
+- name: Set IP Tables and IP Forward
+  shell: |
+    cat << EOF | tee /etc/sysctl.d/kubernetes.conf
+    net.bridge.bridge-nf-call-ip6tables = 1
+    net.bridge.bridge-nf-call-iptables = 1
+    net.ipv4.ip_forward = 1
+    EOF
+    echo 1 > /proc/sys/net/ipv4/ip_forward
+
+- name: Add Docker’s official GPG key
+  apt_key:
+    url: "https://download.docker.com/linux/ubuntu/gpg"
+    state: present
+
+- name: Install dependent software
+  apt:
+    package:
+      - containerd

@@ -1,0 +1,29 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2021 Intel Corporation
+
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+ansible-lint = "==5.3.2"
+pylint = "==2.9.6"
+yamllint = "==1.26.2"
+ansible = "==4.10.0"
+ansible-core = "==2.11.10"
+cryptography = "==3.3.2"
+jinja2 = "==2.11.3"
+netaddr = "==0.8.0"
+pbr = "==5.4.4"
+jmespath = "==0.9.5"
+"ruamel.yaml" = "==0.16.10"
+"ruamel.yaml.clib" = "==0.2.4"
+MarkupSafe = "==1.1.1"
+ipaddr = "==2.2.0"
+parse = "==1.19.0"
+CherryPy = "==18.8.0"
+kubernetes = "==12"
+
+[requires]
+python_version = "3.9"

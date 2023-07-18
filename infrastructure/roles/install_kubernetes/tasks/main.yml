@@ -1,0 +1,40 @@
+---
+- name: Ensure dependencies are installed
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+    state: present
+
+- name: Add Kubernetes apt key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+  register: add_repository_key
+  ignore_errors: false
+
+- name: Add Kubernetes repository
+  apt_repository:
+    repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+    update_cache: true
+
+- name: Update OS's repos
+  apt:
+    update_cache: yes
+
+- name: Install k8s software
+  apt:
+    package:
+      - kubeadm=1.23.1-00
+      - kubelet=1.23.1-00
+      - kubectl=1.23.1-00
+
+- name: Hold k8s software so it does not get automatically updated
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  loop:
+    - kubeadm
+    - kubelet
+    - kubectl

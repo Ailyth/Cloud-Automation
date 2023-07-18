@@ -1,0 +1,18 @@
+In k8s, native applications can use the Endpoints API for access. Non-native applications can use a Virtual IP-based bridge
+to access back end pods. ServiceTypes Type could be:
+• ClusterIP default - exposes on a cluster-internal IP. Only reachable within cluster
+• NodePort Exposes node IP at a static port. A ClusterIP is also automatically created.
+• LoadBalancer Exposes service externally using cloud providers load balancer. NodePort and ClusterIP automatically created.
+• ExternalName Maps service to contents of externalName using a CNAME record
+
+If CIDR range differs from nodes range, connecting to pod without exposing NodePort will be impossible.
+
+In order to connect with pod, these steps needs to be done:
+1. Expose app with type NodePort
+`kubectl -n accounting expose deployment nginx-one --type=NodePort`
+2. Describe services in namespace where our desired app is:
+`k -n accounting describe services`
+3. Find randomly generated port
+4. Find route to pod
+`route -n`
+5. Curl to app using found route from step 4. and randomly generated port from 3.

@@ -1,0 +1,44 @@
+---
+# Next step is writing local DNS alias in /etc/hosts file.
+# Since we cannot save output from Ansible in variable in simple way,
+# this step will be accomplished via bash script
+# TODO: implement check if entry does exist in /etc/hosts already
+# TODO : this role will not work on workers - find out the way to pass IP from control plane to workers
+- name: Copy script which adds DNS alias to /etc/hosts
+  copy:
+    src: add_dns_alias.sh
+    dest: ~/add_dns_alias.sh
+    mode: 0775
+
+- name: Run script which adds DNS alias to /etc/hosts
+  shell: ~/add_dns_alias.sh
+
+- name: Remove script which adds DNS alias to /etc/hosts
+  file:
+    path: ~/add_dns_alias.sh
+    state: absent
+
+- name: Configure Calico from template
+  template:
+    src: calico.yaml.j2
+    dest: ~/calico.yaml
+    mode: 0775
+  become: no
+
+- name: Configure kubeadm-config.yaml from template
+  template:
+    src: kubeadm-config.yaml.j2
+    dest: ~/kubeadm-config.yaml
+    mode: 0777
+  become: no
+
+- name: Run kubeadm
+  shell: |
+    pwd
+    ls -l
+    kubeadm init --config=kubeadm-config.yaml --upload-certs | tee kubeadm-init.out
+  become: yes
+
+- name: Run Calico
+  shell: kubectl apply -f calico.yaml
+  become: no

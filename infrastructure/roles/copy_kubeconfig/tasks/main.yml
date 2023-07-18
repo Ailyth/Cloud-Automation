@@ -1,0 +1,17 @@
+---
+- name: Create .kube directory
+  file:
+    path: "{{ kube_path }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0777
+    state: directory
+
+- name: Copy admin.conf from /etc/kubernetes/admin.conf
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: '{{ kube_path }}config'
+    remote_src: yes
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  become: yes

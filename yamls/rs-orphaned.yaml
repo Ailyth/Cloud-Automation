@@ -1,0 +1,106 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    cni.projectcalico.org/containerID: 85a47c5a2880eb3de313914f540b32c9657c074b4d950e37a5879cc83fad71d9
+    cni.projectcalico.org/podIP: 192.168.247.32/32
+    cni.projectcalico.org/podIPs: 192.168.247.32/32
+  creationTimestamp: "2022-10-29T11:54:06Z"
+  generateName: rs-one-
+  labels:
+    system: ReplicaOne
+  name: rs-one-rgblz
+  namespace: default
+  resourceVersion: "17075"
+  uid: 1a57b8be-926c-4420-a125-b9a8a4ea3f50
+spec:
+  containers:
+  - image: nginx:1.15.1
+    imagePullPolicy: IfNotPresent
+    name: nginx
+    ports:
+    - containerPort: 80
+      protocol: TCP
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-vglwq
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: kube-worker
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: kube-api-access-vglwq
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2022-10-29T11:54:07Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2022-10-29T11:55:10Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2022-10-29T11:55:10Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2022-10-29T11:54:06Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: containerd://0642abfc5f3af5cd47b4e641320348615d6867dac0372bd3064ad0c0211629d0
+    image: docker.io/library/nginx:1.15.1
+    imageID: docker.io/library/nginx@sha256:4a5573037f358b6cdfa2f3e8a9c33a5cf11bcd1675ca72ca76fbe5bd77d0d682
+    lastState: {}
+    name: nginx
+    ready: true
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2022-10-29T11:55:09Z"
+  hostIP: 192.168.61.130
+  phase: Running
+  podIP: 192.168.247.32
+  podIPs:
+  - ip: 192.168.247.32
+  qosClass: BestEffort
+  startTime: "2022-10-29T11:54:07Z"

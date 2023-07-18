@@ -1,0 +1,6 @@
+---
+- src: geerlingguy.containerd
+- src: https://github.com/geerlingguy/ansible-role-kubernetes
+  version: master
+  name: kubernetes
+- src: haxorof.docker_ce

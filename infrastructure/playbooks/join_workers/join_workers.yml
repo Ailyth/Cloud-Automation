@@ -1,0 +1,31 @@
+---
+- hosts: kube_control_plane
+  tasks:
+    - name: Copy script which generates kubeadm join command script
+      copy:
+        src: ../files/join_worker.sh
+        dest: ~/join_worker.sh
+        mode: +x
+    - name: Run script which generates kubeadm join command script
+      shell: './join_worker.sh'
+    - name: Copy kubeadm join command script
+      fetch:
+        src: ~/join_workers_kubeadm_command.sh
+        dest: ../files/join_workers_kubeadm_command.sh
+        mode: +x
+        flat: true
+        remote_src: true
+
+#TODO: Implement check if join_workers_kubeadm_command.sh exists
+- hosts: kube_node
+  tasks:
+    - name: Copy kubeadm join command script
+      copy:
+        src: ../files/join_workers_kubeadm_command.sh
+        dest: ~/join_workers_kubeadm_command.sh
+        mode: +x
+
+- hosts: kube_node
+  tasks:
+    - name: Run kubeadm join command script
+      shell: '~/join_workers_kubeadm_command.sh'
